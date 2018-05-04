@@ -1,15 +1,14 @@
-from .context import zen
-from zen import util
+from tfeature import util
 import pytest
 import pandas as pd
-import zen.const as cst
-import zen.data_proxy as data
+from tdata import local
 
 
 @pytest.fixture(scope='module')
 def bar():
-    return data.get_local_data(
-        '000001', asset='INDEX', start='20141229', end='20171201')
+    return local.daily(
+        '000001.SH', start_date=20141229, end_date=20171201
+    ).loc[:, ['symbol', 'open', 'close', 'high', 'low', 'volume', 'turnover']]
 
 
 @pytest.fixture(scope='module')
@@ -46,16 +45,17 @@ def test_is_contain(bar):
 
 def test_contain(bar):
     low_high = bar.loc[:, ['low', 'high']]
-    assert util.contain(*low_high.loc['20171128':'20171130'].values) == (
-        3306.28, 3343.06)
+    assert util.contain(
+        *low_high.loc['20171128':'20171130'].values) == pytest.approx(
+            (3306.28, 3343.06))
     assert util.contain(*low_high.loc['20171129':'20171201'].values) is None
     assert util.contain(*low_high.loc['20171124':'20171128'].values) is None
     assert util.contain(*low_high.loc['20171127':'20171129'].values) is None
 
 
 def test_combine(bar, removed_contains):
-    assert util.combine(bar).shape == removed_contains.shape
-    assert util.combine(bar).iat[9, 2] == removed_contains.iat[9, 2]
+    assert len(util.combine(bar)) == len(removed_contains)
+    assert util.combine(bar).iat[9, 2] == pytest.approx(removed_contains.iat[9, 2])
 
 
 def test_parting(removed_contains, brush):
@@ -64,6 +64,7 @@ def test_parting(removed_contains, brush):
     assert pt.loc['2017-11-28', 'low'] == brush.loc['2017-11-28', 'low']
     assert pt.loc['2017-11-28', 'endpoint'] == brush.loc['2017-11-28',
                                                          'endpoint']
+
 
 def test_hist_sum(bar, brush):
     hist_sum = util.hist_sum(bar)

@@ -4,8 +4,14 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+ta-lib = "*"
+"e1839a8" = {path = ".", editable = true}
+tdata = "*"
+fire = "*"
+jaqs = "*"
 
 [dev-packages]
+pytest = "*"
 
 [requires]
 python_version = "3.6"
