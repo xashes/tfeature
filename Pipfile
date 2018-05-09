@@ -9,6 +9,8 @@ ta-lib = "*"
 tdata = "*"
 fire = "*"
 jaqs = "*"
+pyecharts = "*"
+networkx = "*"
 
 [dev-packages]
 pytest = "*"
