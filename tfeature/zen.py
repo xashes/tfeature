@@ -1,7 +1,6 @@
 import numpy as np
 import pandas as pd
 import talib
-from sklearn import preprocessing
 
 
 def contain(k0, k1, k2):
@@ -164,19 +163,3 @@ def hist_sum(df):
             merged.groupby('count')['turnover'].sum())
     pt['pct_change'] = pt['endpoint'] / pt['startpoint'] - 1
     return pt
-
-
-def min_max_scale(df):
-    df = df.copy()
-    scaler = preprocessing.MinMaxScaler(feature_range=(10, 30))
-    values = df.values.reshape(-1, 1)
-    df.loc[:, :] = scaler.fit_transform(values).reshape(-1, 4)
-    return df
-
-
-def standard_scale(df):
-    df = df.copy()
-    scaler = preprocessing.StandardScaler()
-    values = df.values.reshape(-1, 1)
-    df.loc[:, :] = scaler.fit_transform(values).reshape(-1, 4) + 4
-    return df

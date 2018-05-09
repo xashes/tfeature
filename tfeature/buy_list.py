@@ -41,3 +41,20 @@ def buy_list(codes,
         except:
             print('error on {}'.format(code))
     return tbl
+
+
+
+def min_max_scale(df):
+    df = df.copy()
+    scaler = preprocessing.MinMaxScaler(feature_range=(10, 30))
+    values = df.values.reshape(-1, 1)
+    df.loc[:, :] = scaler.fit_transform(values).reshape(-1, 4)
+    return df
+
+
+def standard_scale(df):
+    df = df.copy()
+    scaler = preprocessing.StandardScaler()
+    values = df.values.reshape(-1, 1)
+    df.loc[:, :] = scaler.fit_transform(values).reshape(-1, 4) + 4
+    return df
